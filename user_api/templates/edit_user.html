@@ -1,0 +1,62 @@
+<!-- templates/edit_user.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit User</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+  <div class="max-w-md mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow">
+    <h1 class="text-xl font-bold mb-4">Edit User</h1>
+    <form action="{% url 'update-user' user.id %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label class="block">Username</label>
+        <input type="text" name="username" value="{{ user.username }}" class="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="block">Email</label>
+        <input type="email" name="email" value="{{ user.email }}" class="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="block">First Name</label>
+        <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600">
+      </div>
+
+      <div class="mb-4">
+        <label class="block">Last Name</label>
+        <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600">
+      </div>
+
+      <div class="mb-4">
+        <label class="block">CNIC</label>
+        <input type="text" name="cnic" value="{{ user.cnic }}" class="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="block">Mobile</label>
+        <input type="text" name="mobile_number" value="{{ user.mobile }}" class="w-full border p-2 rounded dark:bg-gray-700 dark:border-gray-600">
+      </div>
+
+      <div class="mb-4">
+        <label class="block">Current Image</label><br>
+        {% if user.profile_picture %}
+          <img src="{{ user.profile_picture.url }}" alt="Current Image" class="w-20 h-20 object-cover rounded-full mb-2">
+          <p class="text-sm text-gray-500">{{ user.profile_picture.name }}</p>
+        {% else %}
+          <p class="text-sm text-gray-500 italic">No image uploaded.</p>
+        {% endif %}
+        <input type="file" name="profile_picture" class="w-full mt-2 dark:bg-gray-700">
+      </div>
+
+      <div class="flex justify-between">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Update</button>
+        <a href="{% url 'dashboard' %}" class="text-blue-600 hover:underline">Back to Dashboard</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

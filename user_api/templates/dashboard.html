@@ -1,0 +1,76 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 transition-colors duration-300">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center p-4 bg-white shadow">
+    <h1 class="text-xl font-bold">User Dashboard</h1>
+    <div class="flex gap-4 items-center">
+      <button onclick="toggleTheme()" class="px-3 py-1 bg-blue-600 text-white rounded">Toggle Theme</button>
+      <a href="{% url 'signup' %}" class="px-3 py-1 bg-green-600 text-white rounded">Register New</a>
+      <a href="{% url 'logout' %}" class="px-3 py-1 bg-red-600 text-white rounded">Logout</a>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div class="p-4 bg-green-100 text-green-800 text-center">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Users Grid -->
+  <div class="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {% for user in users %}
+    <div class="bg-white shadow rounded-xl overflow-hidden">
+      {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="w-full h-48 object-cover">
+      {% else %}
+        <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+          No Image
+        </div>
+      {% endif %}
+
+      <div class="p-4">
+        <p class="text-lg font-bold">{{ user.username }}</p>
+        <p class="text-sm text-gray-500">{{ user.email }}</p>
+        <p class="text-sm"><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+        <p class="text-sm"><strong>CNIC:</strong> {{ user.cnic }}</p>
+        <p class="text-sm"><strong>Mobile:</strong> {{ user.mobile }}</p>
+
+        <div class="mt-4 flex justify-between">
+          <a href="{% url 'update-user' user.id %}" class="text-blue-600 hover:underline">Edit</a>
+          <form method="POST" action="{% url 'delete-user' user.id %}">
+            {% csrf_token %}
+            <button class="text-red-600 hover:underline">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Theme Script -->
+  <script>
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      document.body.classList.toggle("bg-gray-100");
+      document.body.classList.toggle("bg-gray-900");
+      document.body.classList.toggle("text-white");
+      document.body.classList.toggle("text-gray-900");
+    }
+  </script>
+
+</body>
+</html>
