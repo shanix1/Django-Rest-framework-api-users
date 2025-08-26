@@ -6,9 +6,13 @@
   <title>User Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 transition-colors duration-300">
+<body class="bg-gray-100 text-gray-800 transition-colors duration-300">
 
-  <!-- Header -->
+  <!-- Toast -->
+  <div id="toast" class="fixed top-5 right-5 hidden bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
+    <span id="toast-message"></span>
+  </div>
+
   <div class="flex justify-between items-center p-4 bg-white shadow">
     <h1 class="text-xl font-bold">User Dashboard</h1>
     <div class="flex gap-4 items-center">
@@ -18,16 +22,6 @@
     </div>
   </div>
 
-  <!-- Messages -->
-  {% if messages %}
-    <div class="p-4 bg-green-100 text-green-800 text-center">
-      {% for message in messages %}
-        <p>{{ message }}</p>
-      {% endfor %}
-    </div>
-  {% endif %}
-
-  <!-- Users Grid -->
   <div class="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     {% for user in users %}
     <div class="bg-white shadow rounded-xl overflow-hidden">
@@ -38,21 +32,17 @@
           No Image
         </div>
       {% endif %}
-
-      <div class="p-4">
-        <p class="text-lg font-bold">{{ user.username }}</p>
-        <p class="text-sm text-gray-500">{{ user.email }}</p>
-        <p class="text-sm"><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-        <p class="text-sm"><strong>CNIC:</strong> {{ user.cnic }}</p>
-        <p class="text-sm"><strong>Mobile:</strong> {{ user.mobile }}</p>
-
-        <div class="mt-4 flex justify-between">
-          <a href="{% url 'update-user' user.id %}" class="text-blue-600 hover:underline">Edit</a>
-          <form method="POST" action="{% url 'delete-user' user.id %}">
-            {% csrf_token %}
-            <button class="text-red-600 hover:underline">Delete</button>
-          </form>
-        </div>
+      <div class="text-lg font-bold">{{ user.username }}</div>
+      <p class="text-sm text-gray-600">{{ user.email }}</p>
+      <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+      <p><strong>CNIC:</strong> {{ user.cnic }}</p>
+      <p><strong>Mobile:</strong> {{ user.mobile }}</p>
+      <div class="mt-4 flex justify-between">
+        <a href="{% url 'update-user' user.id %}" class="text-blue-600 hover:underline">Edit</a>
+        <form action="{% url 'delete-user' user.id %}" method="POST">
+          {% csrf_token %}
+          <button class="text-red-600 hover:underline">Delete</button>
+        </form>
       </div>
     </div>
     {% endfor %}
@@ -71,6 +61,14 @@
       document.body.classList.toggle("text-gray-900");
     }
   </script>
+
+  {% if messages %}
+    <script>
+      {% for message in messages %}
+        showToast("{{ message }}", "{{ message.tags }}");
+      {% endfor %}
+    </script>
+  {% endif %}
 
 </body>
 </html>
